@@ -4,7 +4,6 @@
 	See README for details.
 *)
 
-
 --        ___       ___          ___          ___       ___
 --       /  /\     /  /\        /  /\        /  /\     /  /\
 --      /  /::\   /  /::\      /  /::\      /  /::\   /  /:/_
@@ -23,7 +22,7 @@ property defaultFolderPointer : ">>>" -- change to whatever delimtier you want t
 property defaultSubfolderPointer : ">"
 property theOptionListstartDelimiter : "{" -- start of a list of options for the preceeding variable
 property optionListEndDelimiter : "}" -- end of a list of options for the preceeding variable
-property defaultTemplateFolder : "Template"
+property defaultTemplateFolder : "Templates"
 property specialSkipDays : {}
 
 property dateFormat : "YYYY.MM.DD" -- sets the format that dates will be displayed in when shown as text (i.e., in notes)
@@ -63,14 +62,6 @@ property specialTemplateFolder : null
 
 -- If not the first time run the script then set the status of template folder to Active. 
 try
-	tell application "OmniFocus"
-		tell default document
-			if visible of front document window is false then
-				make new document window at end of document windows
-			end if
-		end tell
-		activate
-	end tell	
 	if firstRun = false then
 		tell application "OmniFocus"
 			tell default document
@@ -173,29 +164,12 @@ try
 			if (length of theVariables > 0) then my killParagraphStartingWithString(newProjectInstance, variableSymbol)
 			
 			my populateTemplate(newProjectInstance, theVariables, theReplacements)
-			my syncit()
+			
+			-- my syncit()
 			
 		end tell
 	end tell
 	display notification "Project \"" & (name of newProjectInstance) & "\" is ready for action!" with title "OmniFocus Templates" subtitle "Created New Template Instance"
-on error err
-end try
-
--- Set the status of template folder to Dropped even the user didn't create project wiht Templates 2.scpt.
-try
-	tell application "OmniFocus"
-		tell default document
-			if specialTemplateFolder is not null then
-				set theHelperFolder to first flattened folder where its name = specialTemplateFolder
-			else
-				set theHelperFolder to first flattened folder where its name = defaultTemplateFolder
-			end if
-			tell theHelperFolder
-				set hidden to 1
-				-- Set the status of folder to Dropped.
-			end tell
-		end tell
-	end tell
 on error err
 end try
 
@@ -1464,4 +1438,3 @@ on customDateStyle(theDate)
 	set my text item delimiters to storeDelimiters
 	return returnDate
 end customDateStyle
-
